@@ -12,33 +12,13 @@ class ToDoListViewController: UITableViewController {
     
     
     var itemArray = [Item]()
-    
+    //Creato il Path che mi serve per conoscere dove andare a salvare gli elementi dell'applicazione aggiunti dall'utente.
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        print(dataFilePath)
-        
-        func addElement(item: Item, _ title: String) {
-            item.title = title
-            itemArray.append(item)
-        }
-        
-        let newItem = Item()
-        addElement(item: newItem, "Pippo")
-        
-        let newItem2 = Item()
-        addElement(item: newItem2, "Pluto")
-        
-        let newItem3 = Item()
-        addElement(item: newItem3, "Flauro")
-        
-        //        // Permetto all'utente di visualizzare i cambiamenti che ha fatto negli utilizzi precedenti, l'array salvato nel defaults viene aggiornato nella parte "addButton: New Items"
-        //        if let items = defaults.array(forKey: "ToDoListArray") as? [Item] {
-        //            itemArray = items
-        //        }
+        // Permetto all'utente di visualizzare i cambiamenti che ha fatto negli utilizzi precedenti, l'array salvato nel defaults viene aggiornato nella parte "addButton: New Items"
+        loadItems()
         
     }
     //MARK: -  TableView
@@ -101,8 +81,10 @@ class ToDoListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    //MARK: -  Save Items
+    //MARK: -  Save Items and Load Items
+    //Queste due funzioni servono per salvare gli elementi nell' NSDecoder e per caricare nelle view dell'app gli stessi elementi salvati. Nella prima la funzione salva gli elmenti sottoforma di elementi diversi appunto grazie alla PropertyListEncoder(). Nella seconda facciamo il processo inverso: attraverso la PropertyListDecoder() facciamo conoscere all'app gli elementi salvati.
     
+    //Creata funzione che salva nella P.List gli elementi creati dall'utente
     func saveItems() {
         // Create an object that encodes instances of data types to a property list.
         let encoder = PropertyListEncoder()
@@ -118,6 +100,18 @@ class ToDoListViewController: UITableViewController {
         // Viene aggiornato il Database per permettere alla view di far vedere i nuovi elementi aggiunti nell'array
         self.tableView.reloadData()
         
+    }
+    
+    //Creata funzione che aggiunge alla view l'itemArray: i nuovi elementi creati dall'utente, cioè gli elementi salvati nel NSDecoder
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+                itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print(error)
+            }
+        }
     }
 }
 

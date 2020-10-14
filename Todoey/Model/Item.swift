@@ -10,7 +10,7 @@ import Foundation
 
 
 // Creata la classe con protocollo Encodable per essere utilizzata nella plist (al fine di salvare i dati inseriti dall'utente)
-class Item: Encodable {
+class Item: Codable {
     var done: Bool = false
     var title: String = ""
 }
