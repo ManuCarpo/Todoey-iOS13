@@ -94,7 +94,7 @@ class ToDoListViewController: UITableViewController {
         do {
             try context.save()
         } catch  {
-            print("Errorsaving context \(error)")
+            print("Error saving context \(error)")
         }
         
         // Viene aggiornato il Database per permettere alla view di far vedere i nuovi elementi aggiunti nell'array
